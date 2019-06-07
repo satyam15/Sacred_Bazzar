@@ -4,6 +4,8 @@ import ClientDatabase.Database;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -31,7 +33,7 @@ import javax.mail.internet.MimeMessage;
 
 public class SL extends javax.swing.JFrame 
 {
-    public static HomePage hp=null;
+    public  HomePage hp=null;
     private String imgpath, lim = "neelakshigauri77@gmail.com", pas = "Neelakshi@CHGS", IP = "127.0.0.1";
     public static byte[] imgByte = null;
     private int EMA = 0, PREP = 0;
@@ -167,7 +169,7 @@ public class SL extends javax.swing.JFrame
         showPassword2 = new javax.swing.JButton();
         WarningcUN = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBounds(new java.awt.Rectangle(500, 150, 985, 682));
         setResizable(false);
 
@@ -682,7 +684,8 @@ public class SL extends javax.swing.JFrame
 
 
     private void LoginRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginRButtonActionPerformed
-        if (LoginRButton.isSelected() == true) {
+        if (LoginRButton.isSelected() == true) 
+        {
             jPanel4.removeAll();
             jPanel4.repaint();
             jPanel4.revalidate();
@@ -713,7 +716,11 @@ public class SL extends javax.swing.JFrame
         jPanel4.repaint();
         jPanel4.revalidate();
     }//GEN-LAST:event_HELPActionPerformed
-
+ public void close()
+ {
+     WindowEvent winevt=new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winevt);
+ }
 
     private void LOGINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LOGINActionPerformed
          
@@ -791,16 +798,18 @@ public class SL extends javax.swing.JFrame
                             while(rs.next())
                             {
                                 TRAC tr=new TRAC();
-                                tr.pid=rs.getInt(1);
-                                tr.pname=rs.getString(2);
-                                tr.Date=rs.getString(3);
+                                tr.Day=rs.getInt(1);
+                                tr.Month=rs.getString(2);
+                                tr.Year=rs.getInt(3);
                                 tr.Time=rs.getString(4);
-                                tr.Comp=rs.getString(5);
-                                tr.Desc=rs.getString(6);
-                                tr.MFG=rs.getString(7);
-                                tr.Cost=rs.getString(8);
-                                tr.Quant=rs.getInt(9);
-                                tr.imgbyte=rs.getBytes(10);
+                                tr.pid=rs.getInt(5);
+                                tr.imgbyte=rs.getBytes(6);
+                                tr.Desc=rs.getString(7);
+                                tr.MFG=rs.getString(8);
+                                tr.type=rs.getString(9);  
+                                tr.Quant=rs.getInt(10);
+                                tr.Cost=rs.getString(11);
+                                tr.Comp=rs.getString(12);
                                 ImageIcon image=null;
                                 ImageIcon IMAGE=new ImageIcon(new ImageIcon(tr.imgbyte).getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH));
                                 System.out.println("IMAGE  bytes executed");
@@ -811,7 +820,7 @@ public class SL extends javax.swing.JFrame
                                 HomePage.CT.add(tr);
                             }
                      //   }
-                            
+                            close();
                         hp.setVisible(true);
                     } catch (Exception ex) {
                         System.out.println("Error in Login Action Performed in SL calss");

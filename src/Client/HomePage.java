@@ -1,9 +1,8 @@
 package Client;
-import Client.TRAC;
 import ClientDatabase.Database;
-import java.awt.EventQueue;
-import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -14,14 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static javafx.scene.input.KeyCode.R;
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
@@ -31,15 +26,15 @@ import javax.swing.table.TableRowSorter;
 public class HomePage extends javax.swing.JFrame 
 {  
     enum mth 
-{ 
-    RED,January,February,March,April,May,June,July,August,September,October,November,December; 
-} 
+    {
+        RED,January,February,March,April,May,June,July,August,September,October,November,December; 
+    }
     public static ArrayList <TRAC> CT=new ArrayList<>();
     public static TransactionHistory tsH=null;
     private static ProductDescription PDesc;
     public static String Dtp;
     public static Cart CTRT=null;
-    private DefaultTableModel DFM;
+    private DefaultTableModel DFM,model,MoodleC,TSH;
     private static Database cdb=null;
     private int str;
     public HomePage() throws ClassNotFoundException 
@@ -73,6 +68,73 @@ public class HomePage extends javax.swing.JFrame
                 return false;
             }
         };
+        model=new DefaultTableModel(new Object [][]{},new String [] {"ProductId","ProductName", "Cost", "Description", "Ratings", "Company", "MFGDate", "Image"})
+        {
+            Class[] types = new Class [] 
+            {
+                java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+        public Class getColumnClass(int columnIndex) 
+        {
+            if(columnIndex==7)
+            {
+                return ImageIcon.class;
+            }
+            else
+            {
+                return types [columnIndex];
+            }
+        }//{pid,pname,Cst,desc,R,comp,mfg,image}); 
+        public boolean isCellEditable(int row, int col)
+        {
+            return false;
+        }
+        };
+        MoodleC=new DefaultTableModel(new Object [][]{},new String [] {"Date","Pid","Image","Description","MFG", "Type", "Quant","Cost","Company","Time"})
+        {
+        Class[] types = new Class [] 
+        {
+        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+        };
+
+        public Class getColumnClass(int columnIndex) 
+        {
+            if(columnIndex==2)
+            {
+                return ImageIcon.class;
+            }
+            else
+            {
+                return types [columnIndex];
+            }
+        }
+        public boolean isCellEditable(int row, int col) 
+        {
+            return false;
+        }
+        };
+        TSH=new DefaultTableModel(new Object [][]{},new String [] {"Date","Time", "Pid", "Image","Description", "MFG", "Type", "Quant", "Cost","Company"})
+        {
+            Class[] types = new Class [] 
+            {
+                java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+        public Class getColumnClass(int columnIndex) 
+        {
+            if(columnIndex==3)
+            {
+                return ImageIcon.class;
+            }
+            else
+            {
+                return types [columnIndex];
+            }
+        }
+        public boolean isCellEditable(int row, int col)
+        {
+            return false;
+        }
+        };
     }
     
     @SuppressWarnings("unchecked")
@@ -90,10 +152,10 @@ public class HomePage extends javax.swing.JFrame
         MoreItem = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        ViewTransactions = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        Sorting_Price = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ContentDisplay = new javax.swing.JTable();
@@ -106,11 +168,11 @@ public class HomePage extends javax.swing.JFrame
         SearchBox = new javax.swing.JTextField();
         Search = new javax.swing.JButton();
         CartButton = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        Home = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -154,13 +216,23 @@ public class HomePage extends javax.swing.JFrame
         MoreItem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "none", "Food", "Games" }));
 
         jButton1.setText("My Orders");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("View Offers");
-
-        jButton4.setText("View Tranctions");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        ViewTransactions.setText("View Tranctions");
+        ViewTransactions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewTransactionsActionPerformed(evt);
             }
         });
 
@@ -183,7 +255,7 @@ public class HomePage extends javax.swing.JFrame
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ViewTransactions, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -195,7 +267,7 @@ public class HomePage extends javax.swing.JFrame
                         .addComponent(Electronics, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(Clothes, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ViewTransactions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(MoreItem, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -213,10 +285,10 @@ public class HomePage extends javax.swing.JFrame
         jLabel1.setText("Sort BY");
         jLabel1.setOpaque(true);
 
-        jCheckBox1.setText("Price");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        Sorting_Price.setText("Price");
+        Sorting_Price.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                Sorting_PriceActionPerformed(evt);
             }
         });
 
@@ -228,7 +300,7 @@ public class HomePage extends javax.swing.JFrame
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jCheckBox1))
+                    .addComponent(Sorting_Price))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -237,7 +309,7 @@ public class HomePage extends javax.swing.JFrame
                 .addGap(39, 39, 39)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
-                .addComponent(jCheckBox1)
+                .addComponent(Sorting_Price)
                 .addContainerGap(468, Short.MAX_VALUE))
         );
 
@@ -300,6 +372,11 @@ public class HomePage extends javax.swing.JFrame
         });
 
         More.setText("More");
+        More.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MoreActionPerformed(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 0));
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
@@ -314,11 +391,6 @@ public class HomePage extends javax.swing.JFrame
         SearchBox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 SearchBoxFocusGained(evt);
-            }
-        });
-        SearchBox.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                SearchBoxKeyReleased(evt);
             }
         });
 
@@ -339,10 +411,10 @@ public class HomePage extends javax.swing.JFrame
             }
         });
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UserSideResources/home.png"))); // NOI18N
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        Home.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UserSideResources/home.png"))); // NOI18N
+        Home.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                HomeActionPerformed(evt);
             }
         });
 
@@ -367,7 +439,7 @@ public class HomePage extends javax.swing.JFrame
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(Home, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -379,7 +451,7 @@ public class HomePage extends javax.swing.JFrame
             .addComponent(SignOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(More, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(CartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -423,7 +495,7 @@ public class HomePage extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
 
     private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
-        int sz,pid,i;
+        /*int sz,pid,i;
         float Cst;
         byte [] IMGBYTE=null;
         String desc,comp,mfg,pname,type;
@@ -472,8 +544,8 @@ public class HomePage extends javax.swing.JFrame
                 ImageIcon IMAGE=new ImageIcon(new ImageIcon(IMGBYTE).getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH));
                 System.out.println("IMAGE  bytes executed");
                 Image img=IMAGE.getImage();
-                Image newimg=img.getScaledInstance(400/*Picture.getWidth()*/,/*Picture.getHeight()*/400,Image.SCALE_SMOOTH);
-                image=new ImageIcon(newimg);
+                Image newimg=img.getScaledInstance(400,400,Image.SCALE_SMOOTH);
+       /*         image=new ImageIcon(newimg);
                 DFM.addRow(new Object[]{pid,pname,type,Cst,desc,comp,mfg,image}); 
                 System.out.println("All the Data of "+" th electronics product added in the table ");
             }
@@ -482,38 +554,22 @@ public class HomePage extends javax.swing.JFrame
          {
              System.out.println("Error in electronics Button of Home Page class");
          }  
-       
+       */
     }//GEN-LAST:event_SearchActionPerformed
 
     private void ElectronicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ElectronicsActionPerformed
+        if (model.getRowCount() > 0) {
+    for (int i = model.getRowCount() - 1; i > -1; i--) {
+        model.removeRow(i);
+    }
+        }
         Dtp="Electronics";
         int sz,pid,i;
         float R,Cst;
         byte [] IMGBYTE=null;
         String desc,comp,mfg,pname;
       
-        DefaultTableModel model=new DefaultTableModel(new Object [][]{},new String [] {"ProductId","ProductName", "Cost", "Description", "Ratings", "Company", "MFGDate", "Image"})
-        {
-            Class[] types = new Class [] 
-            {
-                java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-        public Class getColumnClass(int columnIndex) 
-        {
-            if(columnIndex==7)
-            {
-                return ImageIcon.class;
-            }
-            else
-            {
-                return types [columnIndex];
-            }
-        }//{pid,pname,Cst,desc,R,comp,mfg,image}); 
-        public boolean isCellEditable(int row, int col)
-        {
-            return false;
-        }
-        };
+     
         ContentDisplay.setModel(model);
         ContentDisplay.setColumnSelectionAllowed(false);
         ContentDisplay.setName(""); 
@@ -599,12 +655,7 @@ public class HomePage extends javax.swing.JFrame
     }//GEN-LAST:event_ElectronicsActionPerformed
 
     private void NewlyAddedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewlyAddedActionPerformed
-        DefaultTableModel model = new DefaultTableModel(new String[] {"data","price"},0);
-        ContentDisplay.setModel(model);
-        for (int count = 1; count <= 10; count++) 
-        {
-            model.addRow(new Object[]{ count,"gsdgd",35346});
-        }
+    
     }//GEN-LAST:event_NewlyAddedActionPerformed
 
     private void PersonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PersonActionPerformed
@@ -612,34 +663,17 @@ public class HomePage extends javax.swing.JFrame
     }//GEN-LAST:event_PersonActionPerformed
 
     private void ClothesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClothesActionPerformed
+        if (model.getRowCount() > 0) {
+    for (int i = model.getRowCount() - 1; i > -1; i--) {
+        model.removeRow(i);
+    }
+        }
         Dtp="Clothes";
         int sz,pid,i;
         float R,Cst;
         byte [] IMGBYTE=null;
         String desc,comp,mfg,pname;
-        DefaultTableModel model=new DefaultTableModel(new Object [][]{},new String [] {"ProductId","ProductName", "Cost", "Description", "Ratings", "Company", "MFGDate", "Image"})
-        {
-        Class[] types = new Class [] 
-        {
-        java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-        };
-
-        public Class getColumnClass(int columnIndex) 
-        {
-            if(columnIndex==7)
-            {
-                return ImageIcon.class;
-            }
-            else
-            {
-                return types [columnIndex];
-            }
-        }
-        public boolean isCellEditable(int row, int col)
-        {
-            return false;
-        }
-        };
+      
         ContentDisplay.setModel(model);
         ContentDisplay.setColumnSelectionAllowed(false);
         ContentDisplay.setName(""); 
@@ -725,35 +759,18 @@ public class HomePage extends javax.swing.JFrame
     }//GEN-LAST:event_ClothesActionPerformed
 
     private void BooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BooksActionPerformed
+        if (model.getRowCount() > 0) {
+    for (int i = model.getRowCount() - 1; i > -1; i--) {
+        model.removeRow(i);
+    }
+        }
         Dtp="Books";
         // Book.clear();
         int sz,pid,i;
         float R,Cst;
         byte [] IMGBYTE=null;
         String desc,comp,mfg,pname;
-        DefaultTableModel model=new DefaultTableModel(new Object [][]{},new String [] {"ProductId","ProductName", "Cost", "Description", "Ratings", "Company", "MFGDate", "Image"})
-        {
-        Class[] types = new Class [] 
-        {
-        java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-        };
-
-        public Class getColumnClass(int columnIndex) 
-        {
-            if(columnIndex==7)
-            {
-                return ImageIcon.class;
-            }
-            else
-            {
-                return types [columnIndex];
-            }
-        }
-        public boolean isCellEditable(int row, int col)
-        {
-            return false;
-        }
-        };
+       
         ContentDisplay.setModel(model);
         ContentDisplay.setColumnSelectionAllowed(false);
         ContentDisplay.setName(""); 
@@ -843,7 +860,7 @@ public class HomePage extends javax.swing.JFrame
     }//GEN-LAST:event_BooksActionPerformed
 
     private void SearchBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchBoxFocusGained
-        SearchBox.setText("");
+       /* SearchBox.setText("");
         ContentDisplay.setModel(DFM);
         ContentDisplay.setColumnSelectionAllowed(false);
         ContentDisplay.setName(""); 
@@ -867,11 +884,11 @@ public class HomePage extends javax.swing.JFrame
             ContentDisplay.getColumnModel().getColumn(4).setPreferredWidth(100);
             ContentDisplay.getColumnModel().getColumn(5).setPreferredWidth(10);
             ContentDisplay.getColumnModel().getColumn(7).setPreferredWidth(200);
-        }   
+        }   */
     }//GEN-LAST:event_SearchBoxFocusGained
 
     private void RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshActionPerformed
-        if(str==1)
+     /*   if(str==1)
         {
            // JTable table = new JTable(DFM);
                 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(ContentDisplay.getModel());
@@ -881,7 +898,7 @@ public class HomePage extends javax.swing.JFrame
                 sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
                // sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
                 sorter.setSortKeys(sortKeys);
-        }        
+        }       */ 
     }//GEN-LAST:event_RefreshActionPerformed
 
     private void ContentDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ContentDisplayMouseClicked
@@ -964,8 +981,8 @@ public class HomePage extends javax.swing.JFrame
                 
                 System.out.println("All the Data of "+" th electronics product added in the table ");
                 }  
-            PDesc.pack();
-                PDesc.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+          //  PDesc.pack();
+            //    PDesc.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                  main();  
          }
          catch(Exception e)
@@ -977,7 +994,8 @@ public class HomePage extends javax.swing.JFrame
 
     public static void main() 
     {
-        try {
+        try 
+        {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -1000,40 +1018,14 @@ public class HomePage extends javax.swing.JFrame
             }
         });
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   
     private void CartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CartButtonActionPerformed
-        DefaultTableModel Moodle=new DefaultTableModel(new Object [][]{},new String [] {"Date","Pid","Image","Description","MFG", "Type", "Quant","Cost","Company","Time"})
-        {
-        Class[] types = new Class [] 
-        {
-        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-        };
-
-        public Class getColumnClass(int columnIndex) 
-        {
-            if(columnIndex==2)
-            {
-                return ImageIcon.class;
-            }
-            else
-            {
-                return types [columnIndex];
-            }
+           if (MoodleC.getRowCount() > 0) {
+    for (int i = MoodleC.getRowCount() - 1; i > -1; i--) {
+        MoodleC.removeRow(i);
+    }
         }
-        public boolean isCellEditable(int row, int col) 
-        {
-            return false;
-        }
-        };
-        CTRT.CD.setModel(Moodle);
+        CTRT.CD.setModel(MoodleC);
         CTRT.CD.setColumnSelectionAllowed(false);
         CTRT.CD.setName(""); 
         CTRT.CD.setRowHeight(200);
@@ -1067,7 +1059,7 @@ public class HomePage extends javax.swing.JFrame
                
                 Image newimg=CT.get(i).img.getScaledInstance(200,200,Image.SCALE_SMOOTH);
                 image=new ImageIcon(newimg);
-               Moodle.addRow(new Object[]{CT.get(i).Date,CT.get(i).pid,image,CT.get(i).Desc,CT.get(i).MFG,CT.get(i).pname,CT.get(i).Quant,CT.get(i).Cost,CT.get(i).Comp,CT.get(i).Time});      
+               MoodleC.addRow(new Object[]{CT.get(i).Date,CT.get(i).pid,image,CT.get(i).Desc,CT.get(i).MFG,CT.get(i).type,CT.get(i).Quant,CT.get(i).Cost,CT.get(i).Comp,CT.get(i).Time});      
             }
             CTRT.pack();
             CTRT.setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -1105,101 +1097,27 @@ public class HomePage extends javax.swing.JFrame
     
     
     
-    private void SearchBoxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchBoxKeyReleased
-/* int sz,pid,i;
-        float Cst;
-        byte [] IMGBYTE=null;
-        String desc,comp,mfg,pname,type;
-        System.out.println("Table Model Created And now moving towards try block.");
-        try
-        {
-            Socket s1=new Socket("127.0.0.1",7598);
-            DataOutputStream DouT=new DataOutputStream(s1.getOutputStream());
-            DataInputStream DiN=new DataInputStream(s1.getInputStream());
-            DouT.writeUTF(SearchBox.getText());
-            DouT.flush();
-            System.out.println("Search text sent");
-            String flag=null;
-            while(true)
-            {
-                System.out.println("Entered the while loop");
-                flag=DiN.readUTF();
-                if(flag.equals("false"))
-                {
-                    break;
-                }
-                pid=DiN.readInt();
-                System.out.println("Pid received : "+pid);
-                Cst=DiN.readFloat();
-                System.out.println("Cost received"+Cst);
-                desc=DiN.readUTF();
-                System.out.println("Description received"+desc);
-                pname=DiN.readUTF();
-                System.out.println("pname received"+pname);
-                type=DiN.readUTF();
-                System.out.println("pname received"+type); 
-                comp=DiN.readUTF();
-                System.out.println("Company NAme received"+comp);
-                mfg=DiN.readUTF();
-                System.out.println("MFG  received"+mfg);
-                sz=DiN.readInt();
-                System.out.println("Image Size  received"+sz);
-                IMGBYTE=new byte[sz];
-                int j;
-                for(j=0;j<sz;j++)
-                {
-                    IMGBYTE[j]=DiN.readByte();
-                }
-                System.out.println ("Image Bytes All received");
-                ImageIcon image=null;
-                ImageIcon IMAGE=new ImageIcon(new ImageIcon(IMGBYTE).getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH));
-                System.out.println("IMAGE  bytes executed");
-                Image img=IMAGE.getImage();
-                Image newimg=img.getScaledInstance(400/*Picture.getWidth()*///,/*Picture.getHeight()*/400,Image.SCALE_SMOOTH);
-            /*    image=new ImageIcon(newimg);
-                DFM.addRow(new Object[]{pid,pname,type,Cst,desc,comp,mfg,image}); 
-                System.out.println("All the Data of "+" th electronics product added in the table ");
-            }
-         }
-         catch(Exception e)
-         {
-             System.out.println("Error in electronics Button of Home Page class");
-         }  */
-             
-    }//GEN-LAST:event_SearchBoxKeyReleased
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        try {
-            new SL().setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+    private void HomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeActionPerformed
+        
+    }//GEN-LAST:event_HomeActionPerformed
+    public ImageIcon resize(byte[] z)
+    {
+        ImageIcon image=null;
+        ImageIcon IMAGE=new ImageIcon(new ImageIcon(z).getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH));
+        System.out.println("IMAGE  bytes executed");
+        Image img=IMAGE.getImage();
+        Image newimg=img.getScaledInstance(200,200,Image.SCALE_SMOOTH);
+        image=new ImageIcon(newimg);
+        return image;
+    }
+    private void ViewTransactionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewTransactionsActionPerformed
+         if (TSH.getRowCount() > 0) {
+    for (int i = TSH.getRowCount() - 1; i > -1; i--) {
+        TSH.removeRow(i);
+    }
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        ResultSet rs=cdb.getAllTransactioData();
-        DefaultTableModel TSH=new DefaultTableModel(new Object [][]{},new String [] {"Date","Time", "Pid", "Image","Description", "MFG", "Type", "Quant", "Cost","Company"})
-        {
-            Class[] types = new Class [] 
-            {
-                java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-        public Class getColumnClass(int columnIndex) 
-        {
-            if(columnIndex==3)
-            {
-                return ImageIcon.class;
-            }
-            else
-            {
-                return types [columnIndex];
-            }
-        }
-        public boolean isCellEditable(int row, int col)
-        {
-            return false;
-        }
-        };
+        ResultSet rs=cdb.getAllTransactionData();
+        
         tsH.CDTable.setModel(TSH);
         tsH.CDTable.setColumnSelectionAllowed(false);
         tsH.CDTable.setName(""); 
@@ -1234,37 +1152,68 @@ public class HomePage extends javax.swing.JFrame
            {
                System.out.println("Entered while loop");
                mth Moth=mth.valueOf(rs.getString(2));
-               TSH.addRow(new Object[]{(rs.getInt(1)+"/"+Moth.ordinal()+"/"+rs.getInt(3)),rs.getString(4),rs.getInt(5),rs.getBytes(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getInt(10),rs.getString(11),rs.getString(12)});
+               TSH.addRow(new Object[]{(rs.getInt(1)+"/"+Moth.ordinal()+"/"+rs.getInt(3)),rs.getString(4),rs.getInt(5),resize(rs.getBytes(6)),rs.getString(7),rs.getString(8),rs.getString(9),rs.getInt(10),rs.getString(11),rs.getString(12)});
                System.out.println("Row Added");
            }
           //tsH.pack();
-           tsH.setDefaultCloseOperation(HIDE_ON_CLOSE);
-           //mAin();
-           tsH.setVisible(true);
+          // tsH.setDefaultCloseOperation(HIDE_ON_CLOSE);
+           mAin();
+           //tsH.setVisible(true);
         }
          catch(Exception e)
          {
              System.out.println("Error in View History Button of Home Page class");
          }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_ViewTransactionsActionPerformed
 
+    public static void mAin() {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }                                      
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() 
+        {
+            public void run() {
+               tsH.setVisible(true);
+            }
+        });
+    }
     
-    
-     
+     public void close()
+ {
+     WindowEvent winevt=new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winevt);
+ }
     
     
     private void SignOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignOutActionPerformed
-        SL.hp.dispose();
-        MainClient.sl.setVisible(true);
+        close();
+        try {
+            new SL().setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_SignOutActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
                 int i;
                 for(i=0;i<CT.size();i++)
                 {
-                    try 
+                    try
                     {
-                        cdb.addTempCartData(CT.get(i).pid,CT.get(i).pname,CT.get(i).Date,CT.get(i).Time,CT.get(i).Comp,CT.get(i).Desc,CT.get(i).MFG,CT.get(i).Cost,CT.get(i).Quant,CT.get(i).imgbyte);
+                        cdb.addTempCartData(CT.get(i));
                     }
                     catch (ClassNotFoundException ex) {
                         System.out.println("Error in Payment Gteway CAl  in cancel Button Action event performed");
@@ -1272,9 +1221,9 @@ public class HomePage extends javax.swing.JFrame
                 }        
     }//GEN-LAST:event_formWindowClosed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void Sorting_PriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Sorting_PriceActionPerformed
         System.out.println("Action JCheckBox");
-         if(jCheckBox1.isSelected()==true)
+         if(Sorting_Price.isSelected()==true)
        {
            str=1;
            JOptionPane.showMessageDialog(null,"You Should Press Refresh Button");
@@ -1283,7 +1232,19 @@ public class HomePage extends javax.swing.JFrame
         {
             str=0;
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_Sorting_PriceActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void MoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MoreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MoreActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Books;
@@ -1291,6 +1252,7 @@ public class HomePage extends javax.swing.JFrame
     private javax.swing.JButton Clothes;
     private javax.swing.JTable ContentDisplay;
     private javax.swing.JButton Electronics;
+    private javax.swing.JButton Home;
     private javax.swing.JButton More;
     private javax.swing.JComboBox<String> MoreItem;
     private javax.swing.JButton NewlyAdded;
@@ -1299,12 +1261,11 @@ public class HomePage extends javax.swing.JFrame
     private javax.swing.JButton Search;
     private javax.swing.JTextField SearchBox;
     private javax.swing.JButton SignOut;
+    private javax.swing.JCheckBox Sorting_Price;
+    private javax.swing.JButton ViewTransactions;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuItem jMenuItem1;

@@ -52,7 +52,7 @@ public class Database {
             System.out.println("8 ex");
             pstmt.setString(8, AR.MFG);
             System.out.println("9 ex");
-            pstmt.setString(9, AR.pname);
+            pstmt.setString(9, AR.type);
             System.out.println("10 ex");
             pstmt.setInt(10, AR.Quant);
             System.out.println("11 ex");
@@ -139,12 +139,12 @@ public class Database {
                 TT+=(Float.parseFloat(TCst));
                 query="UPDATE TotalPurchaseThisMonth SET Total=? where Month=? and Year=?";
                 pstmt = conn.prepareStatement(query);
-            System.out.println("pstmt executed");
-            pstmt.setString(1,TT.toString());
-            pstmt.setString(2,mth);
-            pstmt.setString(3,myd[2]);
-            rs = pstmt.executeQuery();
-            System.out.println("RS executed");
+                System.out.println("pstmt executed");
+                pstmt.setString(1,TT.toString());
+                pstmt.setString(2,mth);
+                pstmt.setString(3,myd[2]);
+                pstmt.execute();
+                System.out.println("RS executed");
             }
             else
             {
@@ -193,38 +193,44 @@ public class Database {
         return rs;
     }
 
-    public void addTempCartData(int pid, String pname, String date, String time, String Comp, String desc, String Mfg, String Cost, int Q, byte[] img) throws ClassNotFoundException {
-        sql = "INSERT INTO TempCart(pid,pname,Date,Time,Company,Description,MFG,Cost,Quantity,Image) VALUES(?,?,?,?,?,?,?,?,?,?)";
-        try {
+    public void addTempCartData(TRAC AR) throws ClassNotFoundException 
+    {
+        sql = "INSERT INTO TempCart(Day,Month,Year,Time,Pid,Image,Description,MFG,Type,Quant,Cost,Company) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+        try 
+        {
             System.out.println("Entered try block");
             pstmt = conn.prepareStatement(sql);
             System.out.println("1 ex");
-            pstmt.setInt(1, pid);
+            pstmt.setInt(1, AR.Day);
             System.out.println("2 ex");
-            pstmt.setString(2, pname);
+            pstmt.setString(2, AR.Month);
             System.out.println("3 ex");
-            pstmt.setString(3, date);
+            pstmt.setInt(3, AR.Year);
             System.out.println("4 ex");
-            pstmt.setString(4, time);
+            pstmt.setString(4, AR.Time);
             System.out.println("5 ex");
-            pstmt.setString(5, Comp);
+            pstmt.setInt(5, AR.pid);
             System.out.println("6 ex");
-            pstmt.setString(6, desc);
+            pstmt.setBytes(6, AR.imgbyte);
             System.out.println("7 ex");
-            pstmt.setString(7, Mfg);
+            pstmt.setString(7, AR.Desc);
             System.out.println("8 ex");
-            pstmt.setString(8, Cost);
+            pstmt.setString(8, AR.MFG);
             System.out.println("9 ex");
-            pstmt.setInt(9, Q);
+            pstmt.setString(9, AR.type);
             System.out.println("10 ex");
-            pstmt.setBytes(10, img);
+            pstmt.setInt(10, AR.Quant);
             System.out.println("11 ex");
+            pstmt.setString(11, AR.Cost);
+            System.out.println("12 ex");
+            pstmt.setString(12, AR.Comp);
+            System.out.println("13 ex");
             pstmt.execute();
-            System.out.println("Values Inserted in Temp Cart Successfully");
+            System.out.println("Values of add TempCart  Data Inserted Successfully");
             //  return 1;
-        } catch (SQLException e) {
-            System.out.println("Exception in dbConnectivity Class addTempCArt method in function");
-            // return 0;
+        } catch (SQLException e) 
+        {
+            System.out.println("Exception in dbConnectivity Class in add TempCart  Data function");
         }
     }
 
@@ -267,7 +273,7 @@ public class Database {
         return 0;
     }
 
-    public ResultSet getAllTransactioData() 
+    public ResultSet getAllTransactionData() 
     {
         ResultSet rs = null;
         String query = "SELECT * FROM [PurchaseHistory];";
@@ -285,7 +291,8 @@ public class Database {
         return rs;
     }
 
-    public ResultSet getTransactionHistoryDateWise(String mon, int yr) {
+    public ResultSet getTransactionHistoryDateWise(String mon, int yr) 
+    {
         ResultSet rs = null;
         String query = "SELECT * FROM [PurchaseHistory] where Month=? and Year = ?;";
         System.out.println("query initialised");

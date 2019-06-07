@@ -27,7 +27,7 @@ public class Receipt extends javax.swing.JFrame
         netbanking = new javax.swing.JPanel();
         cardpayment = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         Rct.setColumns(20);
         Rct.setRows(5);

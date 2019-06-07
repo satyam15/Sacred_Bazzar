@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 public class MainClient
 {
-    public  static SL sl=null;
     public static void main(String[] args) 
     {
         try 
@@ -41,8 +40,7 @@ public class MainClient
             public void run() 
             {
                 try {
-                    sl=new SL();
-                    sl.setVisible(true);
+                    new SL().setVisible(true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
                 }

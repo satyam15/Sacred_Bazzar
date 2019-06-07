@@ -2,6 +2,8 @@ package Client;
 
 import static Client.HomePage.CT;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException; 
@@ -24,13 +26,37 @@ public class ProductDescription extends javax.swing.JFrame
     public  byte[] imgByte=null;
     private DateFormat df=null;
     private Date  dateobj=null;
+    private   DefaultTableModel Moodle=null;
     public ProductDescription() 
     {
         initComponents();
         df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a");
         dateobj = new Date();
+        Moodle=new DefaultTableModel(new Object [][]{},new String [] {"DateTime","Pid","Image","Description","MFG", "Type", "Quant","Cost","Company"})
+        {
+        Class[] types = new Class [] 
+        {
+        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+        };
+
+        public Class getColumnClass(int columnIndex) 
+        {
+            if(columnIndex==2)
+            {
+                return ImageIcon.class;
+            }
+            else
+            {
+                return types [columnIndex];
+            }
+        }
+        public boolean isCellEditable(int row, int col) 
+        {
+            return false;
+        }
+        };
     }
-    public boolean checkDuplicate()
+  /*  public boolean checkDuplicate()
     {
         System.out.println("Inside checkDuplicate Method of ProductDescription Class");
         int pid=Integer.parseInt(PID.getText());
@@ -48,7 +74,7 @@ public class ProductDescription extends javax.swing.JFrame
         }
         return false;
     }
-    
+    */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -80,7 +106,7 @@ public class ProductDescription extends javax.swing.JFrame
         jLabel9 = new javax.swing.JLabel();
         Pname = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         img1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -256,8 +282,8 @@ public class ProductDescription extends javax.swing.JFrame
     private void atcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atcActionPerformed
        try 
         {
-            if(!checkDuplicate())
-            {
+           // if(!checkDuplicate())
+            //{
                 ImageIcon Img=(ImageIcon)img1.getIcon();
                 TRAC obj=new TRAC(); 
                 String date[]=df.format(dateobj).split(" ");
@@ -344,8 +370,8 @@ public class ProductDescription extends javax.swing.JFrame
                 System.out.println("MFG :"+obj.MFG);
                 obj.Desc=DESC.getText();
                 System.out.println("Description :"+obj.Desc);
-                obj.pname=Pname.getText();
-                System.out.println("Type :"+obj.pname);
+                obj.type=Pname.getText();
+                System.out.println("Type :"+obj.type);
                 obj.Cost=COST.getText();
                 System.out.println("Cost :"+obj.Cost);
               
@@ -353,7 +379,7 @@ public class ProductDescription extends javax.swing.JFrame
                 System.out.println("imgbyte Added");
                 HomePage.CT.add(obj);
                 System.out.println("Object Added");
-            }
+          //  }
         } 
         catch (Exception ex) 
         {
@@ -366,8 +392,8 @@ public class ProductDescription extends javax.swing.JFrame
 
         try 
         {
-            if(!checkDuplicate())
-            {
+          //  if(!checkDuplicate())
+         //   {
                 ImageIcon Img=(ImageIcon)img1.getIcon();
                 TRAC obj=new TRAC(); 
                 String date[]=df.format(dateobj).split(" ");
@@ -445,41 +471,23 @@ public class ProductDescription extends javax.swing.JFrame
                 obj.Comp=COMP.getText();
                 obj.MFG=MFG.getText();
                 obj.Desc=DESC.getText();
-                obj.pname=Pname.getText();
+                obj.type=Pname.getText();
                 obj.Cost=COST.getText();
                 obj.imgbyte=imgByte;
                 System.out.println("imgbyte Added");
                 HomePage.CT.add(obj);
-            }
+         //   }
         }
         catch (Exception ex) 
         {
             
         }
  
-        DefaultTableModel Moodle=new DefaultTableModel(new Object [][]{},new String [] {"DateTime","Pid","Image","Description","MFG", "Type", "Quant","Cost","Company"})
-        {
-        Class[] types = new Class [] 
-        {
-        java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-        };
-
-        public Class getColumnClass(int columnIndex) 
-        {
-            if(columnIndex==2)
-            {
-                return ImageIcon.class;
-            }
-            else
-            {
-                return types [columnIndex];
-            }
+      if (Moodle.getRowCount() > 0) {
+    for (int i = Moodle.getRowCount() - 1; i > -1; i--) {
+        Moodle.removeRow(i);
+    }
         }
-        public boolean isCellEditable(int row, int col) 
-        {
-            return false;
-        }
-        };
         HomePage.CTRT.CD.setModel(Moodle);
         HomePage.CTRT.CD.setColumnSelectionAllowed(false);
         HomePage.CTRT.CD.setName(""); 
@@ -513,14 +521,19 @@ public class ProductDescription extends javax.swing.JFrame
                 ImageIcon image=null;
                 Image newimg=CT.get(i).img.getScaledInstance(200,200,Image.SCALE_SMOOTH);
                 image=new ImageIcon(newimg);
-               Moodle.addRow(new Object[]{CT.get(i).Date,CT.get(i).pid,image,CT.get(i).Desc,CT.get(i).MFG,CT.get(i).pname,CT.get(i).Quant,CT.get(i).Cost,CT.get(i).Comp}); 
+               Moodle.addRow(new Object[]{CT.get(i).Date,CT.get(i).pid,image,CT.get(i).Desc,CT.get(i).MFG,CT.get(i).type,CT.get(i).Quant,CT.get(i).Cost,CT.get(i).Comp}); 
                // System.out.println("All the Data of "+" th electronics product added in the table ");     
             }
             HomePage.CTRT.pack();
             HomePage.CTRT.setDefaultCloseOperation(HIDE_ON_CLOSE);
+           close();
              Main(); 
     }//GEN-LAST:event_bnActionPerformed
-
+public void close()
+ {
+     WindowEvent winevt=new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winevt);
+ }
      public static void Main() {
        
         try {

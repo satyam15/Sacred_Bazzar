@@ -39,7 +39,7 @@ public class TransactionHistory extends javax.swing.JFrame
         month = new javax.swing.JComboBox<>();
         year = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 0, 0));
@@ -189,30 +189,7 @@ public class TransactionHistory extends javax.swing.JFrame
              System.out.println("Error in electronics Button of Home Page class");
          }
     }//GEN-LAST:event_ViewHistoryActionPerformed
-   public static void main(String [] args) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }                                      
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TransactionHistory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() 
-        {
-            public void run() {
-               //tsH.setVisible(true);
-            }
-        });
-    }
+   
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable CDTable;

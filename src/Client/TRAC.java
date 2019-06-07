@@ -14,8 +14,8 @@ import java.awt.Image;
 public class TRAC
  {
         public int pid,Quant;
-        public String Comp,Desc,Date,Time,MFG,pname,Cost,Month; 
+        public String Comp,Desc,Date,Time,MFG,type,Cost,Month; 
         public int Day,Year;
         public Image img;
         public byte[] imgbyte=null;
-    }
+}

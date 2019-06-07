@@ -2,8 +2,11 @@ package Client;
 
 //import static Client.Cart.PG;
 import ClientDatabase.Database;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class PaymentGateway extends javax.swing.JFrame 
 {
@@ -47,7 +50,7 @@ public PaymentGateway()
         jTextArea2 = new javax.swing.JTextArea();
         SaveAddress = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -240,7 +243,11 @@ public PaymentGateway()
     }// </editor-fold>//GEN-END:initComponents
 
     private void proceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proceedActionPerformed
-        cdb.updateTotalPurchase(TCst.getText());
+        
+if(COD.isSelected())
+{
+    cdb.updateTotalPurchase(TCst.getText());
+        System.out.println("Updated Total Purchase amount in totalPurchaseAmount");
         int i;
         for(i=0;i<HomePage.CT.size();i++)
         {
@@ -254,31 +261,71 @@ public PaymentGateway()
             }
         }
         cdb.deleteAllTempCart();
+        //close();
         HomePage.CT.clear();
-if(COD.isSelected())
-{
     rcpt.receit.setEnabledAt(1,false);
     rcpt.receit.setEnabledAt(2,false);
     rcpt.setDefaultCloseOperation(HIDE_ON_CLOSE);
-    Cart.PG.
+    //Cart.PG.
+            close();
     rcpt.setVisible(true);        
 }
 else
 if(CDP.isSelected())
 {
+    cdb.updateTotalPurchase(TCst.getText());
+        System.out.println("Updated Total Purchase amount in totalPurchaseAmount");
+        int i;
+        for(i=0;i<HomePage.CT.size();i++)
+        {
+            try 
+            {
+                cdb.addTransactionData(HomePage.CT.get(i));
+            }
+            catch(Exception ex) 
+            {
+                System.out.println("Error in Payment Gateway Class in proceed button action performed");
+            }
+        }
+        cdb.deleteAllTempCart();
+        //close();
+        HomePage.CT.clear();
     rcpt.receit.setEnabledAt(0,false);
     rcpt.receit.setEnabledAt(1,false);
-    Cart.PG.setVisible(false);
+    //Cart.PG.setVisible(false);
+    close();
     rcpt.setVisible(true); 
 }   
 else
 if(NTB.isSelected())
 {
+    cdb.updateTotalPurchase(TCst.getText());
+        System.out.println("Updated Total Purchase amount in totalPurchaseAmount");
+        int i;
+        for(i=0;i<HomePage.CT.size();i++)
+        {
+            try 
+            {
+                cdb.addTransactionData(HomePage.CT.get(i));
+            }
+            catch(Exception ex) 
+            {
+                System.out.println("Error in Payment Gateway Class in proceed button action performed");
+            }
+        }
+        cdb.deleteAllTempCart();
+        //close();
+        HomePage.CT.clear();
     rcpt.receit.setEnabledAt(0,false);
     rcpt.receit.setEnabledAt(2,false);
-    Cart.PG.setVisible(false);
+   // Cart.PG.setVisible(false);
+   close();
     rcpt.setVisible(true); 
 }  
+else
+{
+    JOptionPane.showMessageDialog(null,"Please Select One of the CheckBoxes");
+}
     }//GEN-LAST:event_proceedActionPerformed
 
     private void ModifyAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyAddressActionPerformed
@@ -292,20 +339,25 @@ if(NTB.isSelected())
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         HomePage.CTRT.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
-
+public void close()
+ {
+     WindowEvent winevt=new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winevt);
+ }
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
                 cdb.deleteAllTempCart();
-        int i;
+                int i;
                 for(i=0;i<HomePage.CT.size();i++)
                 {
                     try 
                     {
-                        cdb.addTempCartData(HomePage.CT.get(i).pid,HomePage.CT.get(i).pname,HomePage.CT.get(i).Date,HomePage.CT.get(i).Time,HomePage.CT.get(i).Comp,HomePage.CT.get(i).Desc,HomePage.CT.get(i).MFG,HomePage.CT.get(i).Cost,HomePage.CT.get(i).Quant,HomePage.CT.get(i).imgbyte);
+                        cdb.addTempCartData(HomePage.CT.get(i)/*.pid,HomePage.CT.get(i).pname,HomePage.CT.get(i).Date,HomePage.CT.get(i).Time,HomePage.CT.get(i).Comp,HomePage.CT.get(i).Desc,HomePage.CT.get(i).MFG,HomePage.CT.get(i).Cost,HomePage.CT.get(i).Quant,HomePage.CT.get(i).imgbyte*/);
                     } 
                     catch (ClassNotFoundException ex) {
                         System.out.println("Error in Payment Gteway CAl  in cancel Button Action event performed");
                     }
                 }
+                close();
                // HomePage.CT.clear();
     }//GEN-LAST:event_cancelActionPerformed
 
