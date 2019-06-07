@@ -29,7 +29,8 @@ public class Database {
     }
 
     
-    public void addTransactionData(TRAC AR) throws ClassNotFoundException {
+    public void addTransactionData(TRAC AR) throws ClassNotFoundException 
+    {
         sql = "INSERT INTO PurchaseHistory(Day,Month,Year,Time,Pid,Image,Description,MFG,Type,Quant,Cost,Company) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             System.out.println("Entered try block");
@@ -60,12 +61,11 @@ public class Database {
             pstmt.setString(12, AR.Comp);
             System.out.println("13 ex");
             pstmt.execute();
-            System.out.println("Values Inserted Successfully");
+            System.out.println("Values of Transaction Data Inserted Successfully");
             //  return 1;
         } catch (SQLException e) 
         {
-            System.out.println("Exception in dbConnectivity Class in addData function");
-            // return 0;
+            System.out.println("Exception in dbConnectivity Class in addTransactionData function");
         }
     }
     public void updateTotalPurchase(String TCst)
@@ -155,27 +155,29 @@ public class Database {
             pstmt.setString(2,myd[2]);
             pstmt.setString(3,TCst);
             rs = pstmt.executeQuery();
-            System.out.println("RS executed");
+            System.out.println("Values of update Total Purchase updated Successfully");
             }
         } catch (Exception e) {
-            System.out.println("Error in getTempCartData in DbConnectivity class");
+            System.out.println("Error in updateTotalPurchase in DbConnectivity class");
         }
     }
     
-    public void deleteAllTempCart() {
+    public void deleteAllTempCart() 
+    {
         sql = "DELETE FROM TempCart;";
         PreparedStatement Prep = null;
         try {
             System.out.println("Entered try block");
             Prep = conn.prepareStatement(sql);
             Prep.execute();
-            System.out.println("Values Deleted Successfully");
+            System.out.println("Values Deleted from Temp Cart Successfully");
         } catch (SQLException e) {
-            System.out.println("Exception in dbConnectivity Class in addData function");
+            System.out.println("Exception in dbConnectivity Class in deleteAll function");
         }
     }
 
-    public ResultSet getTempCartData() {
+    public ResultSet getTempCartData() 
+    {
         ResultSet rs = null;
         String query = "SELECT * FROM [TempCart];";
         System.out.println("query initialised");
@@ -184,7 +186,7 @@ public class Database {
             pstmt = conn.prepareStatement(query);
             System.out.println("pstmt executed");
             rs = pstmt.executeQuery();
-            System.out.println("RS executed");
+            System.out.println("RS executed Get TempCart DAta Executed");
         } catch (Exception e) {
             System.out.println("Error in getTempCartData in DbConnectivity class");
         }
@@ -218,10 +220,10 @@ public class Database {
             pstmt.setBytes(10, img);
             System.out.println("11 ex");
             pstmt.execute();
-            System.out.println("Values Inserted Successfully");
+            System.out.println("Values Inserted in Temp Cart Successfully");
             //  return 1;
         } catch (SQLException e) {
-            System.out.println("Exception in dbConnectivity Class in addData function");
+            System.out.println("Exception in dbConnectivity Class addTempCArt method in function");
             // return 0;
         }
     }
@@ -265,7 +267,8 @@ public class Database {
         return 0;
     }
 
-    public ResultSet getAllTransactioData() {
+    public ResultSet getAllTransactioData() 
+    {
         ResultSet rs = null;
         String query = "SELECT * FROM [PurchaseHistory];";
         PreparedStatement Prep = null;
@@ -282,28 +285,6 @@ public class Database {
         return rs;
     }
 
-    public ResultSet getProductData(String tableName) {
-        System.out.println("Entered getProductData method of database class");
-        ResultSet xyz = null;
-        String query = "SELECT * FROM [" + tableName + "] ;";
-        System.out.println("query initialised");
-        try {
-            System.out.println("Entered Try Block");
-            pstmt = conn.prepareStatement(query);
-            System.out.println("pstmt executed");
-            xyz = pstmt.executeQuery();
-            System.out.println("RS executed");
-        } catch (Exception e) {
-            System.out.println("Error in getProductData in DataBase class");
-            xyz = null;
-        }
-        if (xyz != null) {
-            System.out.println("going to return nut null resultSet from getProductData from dataase class");
-
-        }
-        return xyz;
-    }
-
     public ResultSet getTransactionHistoryDateWise(String mon, int yr) {
         ResultSet rs = null;
         String query = "SELECT * FROM [PurchaseHistory] where Month=? and Year = ?;";
@@ -315,9 +296,9 @@ public class Database {
             pstmt.setString(1, mon);
             pstmt.setInt(2, yr);
             rs = pstmt.executeQuery();
-            System.out.println("RS executed");
+            System.out.println("RS executed getTransactionHistoryDateWise Executed");
         } catch (Exception e) {
-            System.out.println("Error in getAllTransactionData Method in client Database Class in DbConnectivity class");
+            System.out.println("Error in getTransactionHistoryDateWise Method in client Database Class in DbConnectivity class");
         }
         return rs;
     }

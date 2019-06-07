@@ -1216,8 +1216,6 @@ public class HomePage extends javax.swing.JFrame
         tsH.CDTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if(tsH.CDTable.getColumnModel().getColumnCount()>0)
         {
-          //  tsH.CDTable.getColumnModel().getColumn(0).setPreferredWidth(5);
-           // tsH.CDTable.getColumnModel().getColumn(1).setPreferredWidth(10);
             tsH.CDTable.getColumnModel().getColumn(0).setPreferredWidth(10);
             tsH.CDTable.getColumnModel().getColumn(1).setPreferredWidth(10);
             tsH.CDTable.getColumnModel().getColumn(2).setPreferredWidth(5);
@@ -1246,7 +1244,7 @@ public class HomePage extends javax.swing.JFrame
         }
          catch(Exception e)
          {
-             System.out.println("Error in electronics Button of Home Page class");
+             System.out.println("Error in View History Button of Home Page class");
          }
     }//GEN-LAST:event_jButton4ActionPerformed
 
