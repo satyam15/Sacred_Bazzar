@@ -1182,7 +1182,7 @@ public class HomePage extends javax.swing.JFrame
         {
             Class[] types = new Class [] 
             {
-                java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
         public Class getColumnClass(int columnIndex) 
         {
