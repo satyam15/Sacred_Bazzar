@@ -133,26 +133,29 @@ public class Database {
             pstmt.setString(2,myd[2]);
             rs = pstmt.executeQuery();
             System.out.println("RS executed");
+            System.out.println("Number of Rows Received by ResultSet : "+rs.next());
             if(rs.next())
             {
+                System.out.println(" If Stataement Month ALready Exists Just Incremnting ALready Stored Value.");
                 Float TT=Float.parseFloat(rs.getString(3));
                 TT+=(Float.parseFloat(TCst));
                 query="UPDATE TotalPurchaseThisMonth SET Total=? where Month=? and Year=?";
                 pstmt = conn.prepareStatement(query);
                 System.out.println("pstmt executed");
                 pstmt.setString(1,TT.toString());
-                pstmt.setString(2,mth);
+                pstmt.setInt(2,Integer.parseInt(myd[2]));
                 pstmt.setString(3,myd[2]);
                 pstmt.execute();
                 System.out.println("RS executed");
             }
             else
             {
-                query="INSERT INTO TotalPurchaseThisMonth(Month,Year,Total) VALUES(?,?,?)";
+                System.out.println(" Else Stataement Month does not ALready Exists Storing The VAlue First Time.");
+                query="INSERT INTO TotalPurchaseThisMonth(Month,Year,Total) VALUES(?,?,?);";
                 pstmt = conn.prepareStatement(query);
             System.out.println("pstmt executed");
             pstmt.setString(1,mth);
-            pstmt.setString(2,myd[2]);
+            pstmt.setInt(2,Integer.parseInt(myd[2]));
             pstmt.setString(3,TCst);
             rs = pstmt.executeQuery();
             System.out.println("Values of update Total Purchase updated Successfully");

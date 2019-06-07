@@ -821,6 +821,7 @@ public class SL extends javax.swing.JFrame
                             }
                      //   }
                             close();
+                          //  hp.setDefaultCloseOperation(EXIT_ON_CLOSE);
                         hp.setVisible(true);
                     } catch (Exception ex) {
                         System.out.println("Error in Login Action Performed in SL calss");

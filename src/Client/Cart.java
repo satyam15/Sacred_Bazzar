@@ -243,7 +243,7 @@ public void close()
         PG.SaveAddress.setVisible(false);
         PG.pack();
         PG.setDefaultCloseOperation(HIDE_ON_CLOSE);
-        System.out.println("Going to call Main Func");
+        System.out.println("Going to call Main Function in Cart Class");
         MAIN();
         close();
         HomePage.CTRT.setVisible(false);

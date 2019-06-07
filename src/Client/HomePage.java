@@ -1200,7 +1200,8 @@ public class HomePage extends javax.swing.JFrame
     
     private void SignOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignOutActionPerformed
         close();
-        try {
+        try 
+        {
             new SL().setVisible(true);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);

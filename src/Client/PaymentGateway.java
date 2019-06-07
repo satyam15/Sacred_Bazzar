@@ -12,18 +12,19 @@ public class PaymentGateway extends javax.swing.JFrame
 {
     private static Receipt rcpt=null;
     private static Database cdb=null;
-public PaymentGateway() 
-{
-    initComponents();
-    rcpt=new Receipt();
-        try 
-        {
-            cdb=new Database();
-        } catch (Exception ex) 
-        {
-            System.out.println("Error in Payment Gateway while making object of Client Database to  hold User records");
-        }
-}
+    public PaymentGateway()
+    {
+        initComponents();
+        rcpt=new Receipt();
+            try 
+            {
+                cdb=new Database();
+            } 
+            catch (Exception ex) 
+            {
+                System.out.println("Error in Payment Gateway while making object of Client Database to  hold User records");
+            }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -244,10 +245,10 @@ public PaymentGateway()
 
     private void proceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proceedActionPerformed
         
-if(COD.isSelected())
-{
-    cdb.updateTotalPurchase(TCst.getText());
-        System.out.println("Updated Total Purchase amount in totalPurchaseAmount");
+    if(COD.isSelected())
+    {
+        cdb.updateTotalPurchase(TCst.getText());
+      //  System.out.println("Updated Total Purchase amount in totalPurchaseAmount");
         int i;
         for(i=0;i<HomePage.CT.size();i++)
         {
@@ -261,13 +262,11 @@ if(COD.isSelected())
             }
         }
         cdb.deleteAllTempCart();
-        //close();
         HomePage.CT.clear();
-    rcpt.receit.setEnabledAt(1,false);
-    rcpt.receit.setEnabledAt(2,false);
-    rcpt.setDefaultCloseOperation(HIDE_ON_CLOSE);
-    //Cart.PG.
-            close();
+        rcpt.receit.setEnabledAt(1,false);
+        rcpt.receit.setEnabledAt(2,false);
+        rcpt.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        close();
     rcpt.setVisible(true);        
 }
 else
