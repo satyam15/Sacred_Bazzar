@@ -240,7 +240,8 @@ public PaymentGateway()
     }// </editor-fold>//GEN-END:initComponents
 
     private void proceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proceedActionPerformed
-int i;
+        cdb.updateTotalPurchase(TCst.getText());
+        int i;
         for(i=0;i<HomePage.CT.size();i++)
         {
             try 

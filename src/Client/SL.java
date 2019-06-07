@@ -106,7 +106,8 @@ public class SL extends javax.swing.JFrame
         }
     }
 
-    public SL() throws ClassNotFoundException {
+    public SL() throws ClassNotFoundException 
+    {
         initComponents();
         objS = new ClientCodeSignUp(8005);
         cUN = new checkUserName(6090);
@@ -715,7 +716,8 @@ public class SL extends javax.swing.JFrame
 
 
     private void LOGINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LOGINActionPerformed
-              Socket socketL=null;
+         
+        Socket socketL=null;
               DataInputStream inL=null;
               DataOutputStream outL=null;
             try 

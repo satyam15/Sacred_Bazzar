@@ -1,4 +1,4 @@
-package Database;
+package ServerDatabase;
 
 import java.awt.Image;
 import java.sql.*;

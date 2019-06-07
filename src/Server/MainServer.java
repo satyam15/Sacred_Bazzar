@@ -1,5 +1,5 @@
 package Server;
-import Database.DbConnectivity;
+import ServerDatabase.DbConnectivity;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
