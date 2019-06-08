@@ -8,8 +8,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Database {
-
+public class Database 
+{
     private static Connection conn = null;
     private static String sql = null;
     private static PreparedStatement pstmt = null;
@@ -72,7 +72,8 @@ public class Database {
     {
         String date[] = df.format(dateobj).split(" ");
         String myd[] = date[0].split("/"), mth = null;
-        switch (myd[1]) {
+        switch (myd[1]) 
+        {
             case "01": {
                 mth = "January";
                 break;
@@ -125,12 +126,13 @@ public class Database {
         ResultSet rs = null;
         String query = "SELECT * FROM [TotalPurchaseThisMonth] WHERE Month=? and Year=?;";
         System.out.println("query initialised");
-        try {
+        try 
+        {
             System.out.println("Entered Try Block");
             pstmt = conn.prepareStatement(query);
             System.out.println("pstmt executed");
             pstmt.setString(1,mth);
-            pstmt.setString(2,myd[2]);
+            pstmt.setInt(2,Integer.parseInt(myd[2]));
             rs = pstmt.executeQuery();
             System.out.println("RS executed");
             System.out.println("Number of Rows Received by ResultSet : "+rs.next());
@@ -141,24 +143,27 @@ public class Database {
                 TT+=(Float.parseFloat(TCst));
                 query="UPDATE TotalPurchaseThisMonth SET Total=? where Month=? and Year=?";
                 pstmt = conn.prepareStatement(query);
-                System.out.println("pstmt executed");
                 pstmt.setString(1,TT.toString());
-                pstmt.setInt(2,Integer.parseInt(myd[2]));
-                pstmt.setString(3,myd[2]);
+                pstmt.setInt(3,Integer.parseInt(myd[2]));
+                pstmt.setString(2,mth);
+                System.out.println("pstmt executed");
                 pstmt.execute();
-                System.out.println("RS executed");
+                System.out.println("pstmt executed");
             }
             else
             {
                 System.out.println(" Else Stataement Month does not ALready Exists Storing The VAlue First Time.");
                 query="INSERT INTO TotalPurchaseThisMonth(Month,Year,Total) VALUES(?,?,?);";
                 pstmt = conn.prepareStatement(query);
-            System.out.println("pstmt executed");
-            pstmt.setString(1,mth);
-            pstmt.setInt(2,Integer.parseInt(myd[2]));
-            pstmt.setString(3,TCst);
-            rs = pstmt.executeQuery();
-            System.out.println("Values of update Total Purchase updated Successfully");
+                pstmt.setString(1,mth);
+                System.out.println("month fixed in pstmt");
+                pstmt.setInt(2,Integer.parseInt(myd[2]));
+                System.out.println("Year fixed in pstmt");
+                pstmt.setString(3,TCst);
+                System.out.println("Total Cost fixed in pstmt");
+                rs = pstmt.executeQuery();
+                System.out.println("pstmt executed");
+                System.out.println("Values of update Total Purchase updated Successfully");
             }
         } catch (Exception e) {
             System.out.println("Error in updateTotalPurchase in DbConnectivity class");
@@ -288,7 +293,8 @@ public class Database {
             System.out.println("pstmt executed");
             rs = Prep.executeQuery();
             System.out.println("RS executed");
-        } catch (Exception e) {
+        } catch (Exception e) 
+        {
             System.out.println("Error in getAllTransactionData Method in client Database Class in DbConnectivity class");
         }
         return rs;

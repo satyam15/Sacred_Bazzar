@@ -16,7 +16,107 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 public class MainServer extends javax.swing.JFrame 
 {
-   // private static DbConnectivity dbc;
+    public  class Transaction implements Runnable
+    {
+        private Socket socketTRC=null;
+        private ServerSocket serverTRC=null;
+        private DataInputStream inTRC=null;
+        private DataOutputStream outTRC=null;
+        private String UName,passwd,Month,Time,Desc,MFG,Type,Cost,Comp,fg;
+        private int Day,Year,Pid,imgSz,Quant;
+        private byte[] imgByte=null;
+        private int states=0;
+        //Day,Month,Year,Time,Pid,Image,Description,MFG,Type,Quant,Cost,Company;
+        private byte[] imgbyte=null;
+        private DbConnectivity objTRC=null;
+        public Transaction(int port)
+        {
+            try
+            {
+                objTRC=new DbConnectivity();
+                System.out.println("DbConnectivity base signuo created");
+                serverTRC= new ServerSocket(port); 
+                System.out.println("server TRC created");
+            }
+            catch(Exception e)
+            {
+            System.out.println("Error in ServerCode class in TRC based Constructor"); 
+            }
+        }
+        public void RUN()
+        {
+             System.out.println("TRC Accept Server StartedEntered RUN method : ");
+               try 
+               {
+                socketTRC=serverTRC.accept();
+                System.out.println("TRC Client accepted"); 
+                inTRC = new DataInputStream(new BufferedInputStream(socketTRC.getInputStream())); 
+                System.out.println("inTRC created");
+                outTRC=new DataOutputStream(new BufferedOutputStream(socketTRC.getOutputStream()));
+                System.out.println("outTRC created");
+                UName=inTRC.readUTF();
+                System.out.println("User Name Accepted : "+UName);
+                passwd=inTRC.readUTF();
+                System.out.println("Password Accepted : "+passwd);
+                   System.out.println("Going to Receive Transaction History Row by Row");
+                while(true)
+                {
+                    fg=inTRC.readUTF();
+                    System.out.println("fg : "+fg);
+                    if(fg.equals("false"))
+                    {
+                        break;
+                    }
+                    Day=inTRC.readInt();
+                System.out.println("Day Accepted : "+Day);
+                Month=inTRC.readUTF();
+                    System.out.println("Month Accepted : "+Month);
+                 
+                        Year=inTRC.readInt();
+                        System.out.println("Year Accepted : "+Year);
+                        Time=inTRC.readUTF();
+                        System.out.println("Time Accepted : "+Time);
+                        Pid=inTRC.readInt();
+                        imgSz=inTRC.readInt();
+                        System.out.printf("The Size of Byte Array is received : %d\n",imgSz);
+                        imgbyte=new byte[imgSz];
+                        System.out.println("Going to print byte array : ");
+                        for(int i=0;i<imgSz;i++)
+                        {
+                            imgbyte[i]=inTRC.readByte();
+                            System.out.printf("%d ",imgbyte[i]);
+                        }
+                        System.out.println("Received Image in byte format ");
+                        Desc=inTRC.readUTF();
+                        System.out.println("Description Accepted : "+Desc);
+                   MFG=inTRC.readUTF();
+                   Type=inTRC.readUTF();
+                   Quant=inTRC.readInt();
+                   Cost=inTRC.readUTF();
+                   Comp=inTRC.readUTF();
+                        objTRC.addTransactionData(UName,passwd,Day,Month,Year,Time,Pid,imgbyte,Desc,MFG,Type,Quant,Cost,Comp);
+                        System.out.println("Accept TRC request handled successfully.  State value :"+states);
+                       
+                }
+        }
+            catch (Exception ex) 
+            {
+                System.out.println("Error in ServerCode TRC Inner Class"); 
+            }
+        }
+        
+        
+        public void run()
+        { 
+           while(true) 
+           {
+               System.out.println("Going to call  RUN method from run method of Transaction class in MainServer");
+              RUN();
+           }
+        }
+    }
+    
+    
     public class checkUserName implements Runnable 
     {
         private Socket ScUN = null;
@@ -70,7 +170,7 @@ public class MainServer extends javax.swing.JFrame
         }
     }
     
-    public class SendSearchData implements Runnable 
+   /* public class SendSearchData implements Runnable 
     {
         private Socket SPD = null;
         private ServerSocket SSPD = null;
@@ -165,7 +265,7 @@ public class MainServer extends javax.swing.JFrame
          }
         }
     }
-  
+  */
     public class SendProductData implements Runnable 
     {
         private Socket SPD = null;
@@ -548,6 +648,7 @@ public class MainServer extends javax.swing.JFrame
     }
     
  
+    
     public MainServer() throws ClassNotFoundException 
     {
         initComponents();
@@ -557,75 +658,35 @@ public class MainServer extends javax.swing.JFrame
         SPD=new Thread(new SendProductData(9000));
         SPDesc=new Thread(new SendProductDescription(7000));
         cUName=new Thread(new checkUserName(6090));
+        TRC=new Thread(new Transaction(9876));
       //  Search=new Thread(new SendSearchData(7598));
         signup.start();
         login.start();
         SPD.start();
         SPDesc.start();
         cUName.start();
+        TRC.start();
       //  Search.start();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        ReceivedImage = new javax.swing.JLabel();
-        checkLOGIN = new javax.swing.JButton();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        ReceivedImage.setBackground(new java.awt.Color(255, 255, 255));
-        ReceivedImage.setOpaque(true);
-
-        checkLOGIN.setText("jButton1");
-        checkLOGIN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkLOGINActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(ReceivedImage, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
-                .addComponent(checkLOGIN)
-                .addContainerGap())
+            .addGap(0, 1376, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ReceivedImage, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(242, 242, 242)
-                .addComponent(checkLOGIN)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 712, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void checkLOGINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkLOGINActionPerformed
-        try 
-        {
-            DbConnectivity ds=new DbConnectivity();
-            int fg=ds.checkLogin("neelakshi1","Airbus@23");
-            if(fg==1)
-            {
-                System.out.println("Successfully executed");
-            }
-            else
-            {
-                System.out.println("UNSuccessfully executed");
-            }
-        } 
-        catch (Exception ex) 
-        {
-            System.out.println("Error in checkLogin Button");
-            System.out.println(ex);
-        }
-    }//GEN-LAST:event_checkLOGINActionPerformed
     
     public static void main(String args[]) throws Exception
     {
@@ -674,8 +735,7 @@ public class MainServer extends javax.swing.JFrame
     private Thread SPDesc=null;
     private Thread Search=null;
     private Thread cUName=null;
+    private Thread TRC=null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static javax.swing.JLabel ReceivedImage;
-    private javax.swing.JButton checkLOGIN;
     // End of variables declaration//GEN-END:variables
 }

@@ -35,6 +35,7 @@ public class SL extends javax.swing.JFrame
 {
     public  HomePage hp=null;
     private String imgpath, lim = "neelakshigauri77@gmail.com", pas = "Neelakshi@CHGS", IP = "127.0.0.1";
+    public static String unm,passd;
     public static byte[] imgByte = null;
     private int EMA = 0, PREP = 0;
     private static ClientCodeSignUp objS=null;
@@ -741,8 +742,8 @@ public class SL extends javax.swing.JFrame
                 System.out.println("Error in ClientCodelogin based Constructor.");
             }
         
-            String unm = Username.getText();
-            String passd = new String(Password.getPassword());
+            unm = Username.getText();
+            passd = new String(Password.getPassword());
 
             int flag = 1;
             try 

@@ -5,9 +5,10 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 public class DbConnectivity
 {
-    private DateFormat df = null;
+    private DateFormat df =null;
     private java.util.Date dateobj = null;
     private String Datefrmt = "dd/MM/yy HH:mm:ss a";
     public static String UserAddress=null;
@@ -36,116 +37,52 @@ public class DbConnectivity
         catch (SQLException e) 
         {
             System.out.println("Error in dbConnectivity() constructor");
-        } 
+        }
     }
 
-    public void getSearchData(String Str) throws SQLException
+    public void addTransactionData(String UName,String passwd,int Day,String Month,int Year,String Time,int Pid,byte [] imgbyte,String Desc,String MFG,String Type,int Quant,String Cost,String Comp)
     {
-        ResultSet ans=null;
-        String Tables[]={"Books","Clothes","Electronics","Food","Games"},query=null;
-        PreparedStatement PSTMT=null;
-        int i;
-        System.out.println("Going to Search for specific Product Name.");
-        try
+            sql = "INSERT INTO PurchaseHistory(UserName,Password,Day,Month,Year,Time,Pid,Image,Description,MFG,Type,Quant,Cost,Company) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            try {
+            System.out.println("Entered try block");
+            pstmt = conn.prepareStatement(sql);
+            System.out.println("1 ex");
+            pstmt.setString(1,UName);
+            System.out.println("2 ex");
+            pstmt.setString(2,passwd);
+            System.out.println("3 ex");
+            pstmt.setInt(3,Day);
+            System.out.println("4 ex");
+            pstmt.setString(4,Month);
+            System.out.println("5 ex");
+            pstmt.setInt(5,Year);
+            System.out.println("6 ex");
+            pstmt.setString(6,Time);
+            System.out.println("7 ex");
+            pstmt.setInt(7,Pid);
+            System.out.println("8 ex");
+            pstmt.setBytes(8,imgbyte);
+            System.out.println("9 ex");
+            pstmt.setString(9,Desc);
+            System.out.println("10 ex");
+            pstmt.setString(10,MFG);
+            System.out.println("11 ex");
+            pstmt.setString(11,Type);
+            System.out.println("12 ex");
+            pstmt.setInt(12,Quant);
+            System.out.println("13 ex");
+            pstmt.setString(13,Cost);
+            System.out.println("14 ex");
+            pstmt.setString(14,Comp);
+            System.out.println("15 ex");
+            pstmt.execute();
+            System.out.println("Values of Transaction Data Inserted Successfully");
+        } catch (SQLException e) 
         {
-            for(i=0;i<Tables.length;i++)
-            {
-                query="SELECT * FROM [ " +Tables[i]+ " ]  where ProductName = ? ;"; 
-                PSTMT=conn.prepareStatement(query);
-                PSTMT.setString(1,Str);
-                System.out.println("Inside Dbconne class getSearc func Going to execute Query.");
-                ans=PSTMT.executeQuery();
-                System.out.println("Going to ad data to SCH arraylist");
-                while(ans.next())
-                {
-                    Sch obj=new Sch();
-                    System.out.println("Created SCH object.");
-                    obj.Comp=ans.getString(6);
-                    obj.Cost=ans.getFloat(3);
-                    obj.Desc=ans.getString(4);
-                    obj.MFG=ans.getString(7);
-                    obj.Type=Tables[i];
-                    obj.img=ans.getBytes(8);
-                    obj.pid=ans.getInt(1);
-                    obj.pname=ans.getString(2);
-                    SCH.add(obj);
-                    System.out.println("Added SCH object.");
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println("Error in  Tables.");
-            System.out.println(e);
-        }
-        
-        System.out.println("Going to Search for specific Company.");
-        try
-        {
-            for(i=0;i<Tables.length;i++)
-            {
-                query="SELECT * FROM [ " +Tables[i]+ " ]  where Company = ? ;"; 
-                PSTMT=conn.prepareStatement(query);
-                PSTMT.setString(1,Str);
-                System.out.println("Inside Dbconne class getSearc func Going to execute Query.");
-                ans=PSTMT.executeQuery();
-                System.out.println("Going to ad data to SCH arraylist");
-                while(ans.next())
-                {
-                    Sch obj=new Sch();
-                    System.out.println("Created SCH object.");
-                    obj.Comp=ans.getString(6);
-                    obj.Cost=ans.getFloat(3);
-                    obj.Desc=ans.getString(4);
-                    obj.MFG=ans.getString(7);
-                    obj.Type=Tables[i];
-                    obj.img=ans.getBytes(8);
-                    obj.pid=ans.getInt(1);
-                    obj.pname=ans.getString(2);
-                    SCH.add(obj);
-                    System.out.println("Added SCH object.");
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println("Error in Books Table.");
-            System.out.println(e);
-        }
-        System.out.println("Going to Search for specific ProductID.");
-        try
-        {
-            for(i=0;i<Tables.length;i++)
-            {
-                query="SELECT * FROM [ " +Tables[i]+ " ]  where ProductID = ? ;"; 
-                PSTMT=conn.prepareStatement(query);
-                PSTMT.setString(1,Str);
-                System.out.println("Inside Dbconne class getSearc func Going to execute Query.");
-                ans=PSTMT.executeQuery();
-                System.out.println("Going to ad data to SCH arraylist");
-                while(ans.next())
-                {
-                    Sch obj=new Sch();
-                    System.out.println("Created SCH object.");
-                    obj.Comp=ans.getString(6);
-                    obj.Cost=ans.getFloat(3);
-                    obj.Desc=ans.getString(4);
-                    obj.MFG=ans.getString(7);
-                    obj.Type=Tables[i];
-                    obj.img=ans.getBytes(8);
-                    obj.pid=ans.getInt(1);
-                    obj.pname=ans.getString(2);
-                    SCH.add(obj);
-                    System.out.println("Added SCH object.");
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println("Error in Books Table.");
-            System.out.println(e);
+            System.out.println("Exception in dbConnectivity Class in addTransactionData function");
         }
     }
+    
     
     public  int addUserData(String sn,String un,String pd,String em,String ph,String dob,byte[] imgByte,String add) throws ClassNotFoundException
     {

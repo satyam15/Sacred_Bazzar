@@ -1,9 +1,13 @@
 package Client;
 
-//import static Client.Cart.PG;
 import ClientDatabase.Database;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -12,6 +16,8 @@ public class PaymentGateway extends javax.swing.JFrame
 {
     private static Receipt rcpt=null;
     private static Database cdb=null;
+    private int port=9876;
+    private String IP="127.0.0.1";
     public PaymentGateway()
     {
         initComponents();
@@ -19,7 +25,7 @@ public class PaymentGateway extends javax.swing.JFrame
             try 
             {
                 cdb=new Database();
-            } 
+            }
             catch (Exception ex) 
             {
                 System.out.println("Error in Payment Gateway while making object of Client Database to  hold User records");
@@ -244,11 +250,9 @@ public class PaymentGateway extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
 
     private void proceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proceedActionPerformed
-        
     if(COD.isSelected())
     {
         cdb.updateTotalPurchase(TCst.getText());
-      //  System.out.println("Updated Total Purchase amount in totalPurchaseAmount");
         int i;
         for(i=0;i<HomePage.CT.size();i++)
         {
@@ -256,11 +260,88 @@ public class PaymentGateway extends javax.swing.JFrame
             {
                 cdb.addTransactionData(HomePage.CT.get(i));
             }
+            catch(Exception ex)
+            {
+                System.out.println("Error in Payment Gateway Class in proceed button action performed");
+            }
+        }
+     /*   Socket S=null;
+        DataInputStream din=null;
+        DataOutputStream dout=null;
+        System.out.println("Sockets Initialise in Transactio Gatgeway CALss.");
+        try 
+        { 
+            S=new Socket(IP,port);
+            din=new DataInputStream(S.getInputStream());
+            dout=new DataOutputStream(S.getOutputStream());
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+        try
+        {
+            dout.writeUTF(SL.unm);
+            dout.flush();
+            dout.writeUTF(SL.passd);
+            dout.flush();
+            System.out.println("UserName And Password Is sent to Server from PaymentGateWay");
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in sending UserName And Password Is sent to Server from PaymentGateWay");
+        }
+        System.out.println("Username and passd sent to server");
+        for(i=0;i<HomePage.CT.size();i++)
+        {
+            try 
+            {
+                dout.writeUTF("true");
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Day);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Month);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Year);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Time);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).pid);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).imgbyte.length);
+                dout.flush();
+                System.out.println("Image length bytes is  flushed");
+                dout.write(HomePage.CT.get(i).imgbyte, 0, HomePage.CT.get(i).imgbyte.length);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Desc);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).MFG);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).type);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Quant);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Cost);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Comp);
+                dout.flush();
+                System.out.println("Data sent");
+            }
             catch(Exception ex) 
             {
                 System.out.println("Error in Payment Gateway Class in proceed button action performed");
             }
         }
+        try
+        {
+            dout.writeUTF("false");
+            dout.flush();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error In payment GateWay in cod payment style block in sending transaction history to server");
+        }
+        System.out.println("Complete Data Sent");*/
         cdb.deleteAllTempCart();
         HomePage.CT.clear();
         rcpt.receit.setEnabledAt(1,false);
@@ -286,6 +367,83 @@ if(CDP.isSelected())
                 System.out.println("Error in Payment Gateway Class in proceed button action performed");
             }
         }
+     /*    Socket S=null;
+        DataInputStream din=null;
+        DataOutputStream dout=null;
+        System.out.println("Sockets Initialise in Transactio Gatgeway CALss.");
+        try 
+        { 
+            S=new Socket(IP,port);
+            din=new DataInputStream(S.getInputStream());
+            dout=new DataOutputStream(S.getOutputStream());
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+        try
+        {
+            dout.writeUTF(SL.unm);
+            dout.flush();
+            dout.writeUTF(SL.passd);
+            dout.flush();
+            System.out.println("UserName And Password Is sent to Server from PaymentGateWay");
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in sending UserName And Password Is sent to Server from PaymentGateWay");
+        }
+        System.out.println("Username and passd sent to server");
+        for(i=0;i<HomePage.CT.size();i++)
+        {
+            try 
+            {
+                dout.writeUTF("true");
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Day);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Month);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Year);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Time);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).pid);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).imgbyte.length);
+                dout.flush();
+                System.out.println("Image length bytes is  flushed");
+                dout.write(HomePage.CT.get(i).imgbyte, 0, HomePage.CT.get(i).imgbyte.length);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Desc);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).MFG);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).type);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Quant);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Cost);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Comp);
+                dout.flush();
+                System.out.println("Data sent");
+            }
+            catch(Exception ex) 
+            {
+                System.out.println("Error in Payment Gateway Class in proceed button action performed");
+            }
+        }
+        try
+        {
+            dout.writeUTF("false");
+            dout.flush();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error In payment GateWay in cdp payment style block in sending transaction history to server");
+        }
+        System.out.println("Complete Data Sent");*/
         cdb.deleteAllTempCart();
         //close();
         HomePage.CT.clear();
@@ -312,6 +470,83 @@ if(NTB.isSelected())
                 System.out.println("Error in Payment Gateway Class in proceed button action performed");
             }
         }
+      /*   Socket S=null;
+        DataInputStream din=null;
+        DataOutputStream dout=null;
+        System.out.println("Sockets Initialise in Transactio Gatgeway CALss.");
+        try 
+        { 
+            S=new Socket(IP,port);
+            din=new DataInputStream(S.getInputStream());
+            dout=new DataOutputStream(S.getOutputStream());
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+        try
+        {
+            dout.writeUTF(SL.unm);
+            dout.flush();
+            dout.writeUTF(SL.passd);
+            dout.flush();
+            System.out.println("UserName And Password Is sent to Server from PaymentGateWay");
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in sending UserName And Password Is sent to Server from PaymentGateWay");
+        }
+        System.out.println("Username and passd sent to server");
+        for(i=0;i<HomePage.CT.size();i++)
+        {
+            try 
+            {
+                dout.writeUTF("true");
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Day);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Month);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Year);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Time);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).pid);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).imgbyte.length);
+                dout.flush();
+                System.out.println("Image length bytes is  flushed");
+                dout.write(HomePage.CT.get(i).imgbyte, 0, HomePage.CT.get(i).imgbyte.length);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Desc);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).MFG);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).type);
+                dout.flush();
+                dout.writeInt(HomePage.CT.get(i).Quant);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Cost);
+                dout.flush();
+                dout.writeUTF(HomePage.CT.get(i).Comp);
+                dout.flush();
+                System.out.println("Data sent");
+            }
+            catch(Exception ex) 
+            {
+                System.out.println("Error in Payment Gateway Class in proceed button action performed");
+            }
+        }
+        try
+        {
+            dout.writeUTF("false");
+            dout.flush();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error In payment GateWay in ntb payment style block in sending transaction history to server");
+        }
+        System.out.println("Complete Data Sent");*/
         cdb.deleteAllTempCart();
         //close();
         HomePage.CT.clear();
