@@ -116,7 +116,7 @@ public class MainServer extends javax.swing.JFrame
         }
     }
     
-    
+   
     public class checkUserName implements Runnable 
     {
         private Socket ScUN = null;
@@ -585,12 +585,12 @@ public class MainServer extends javax.swing.JFrame
                System.out.println("SignUp Accept Server Started : ");
                try 
                {
-                socketsignup=serversignup.accept();
+                socketsignup=serversignup.accept();       //adding a client socket connection with server socket for communication
                 System.out.println("SignUp Client accepted"); 
                 insignup = new DataInputStream(new BufferedInputStream(socketsignup.getInputStream())); 
                 System.out.println("insignUp created");
-                outsignup=new DataOutputStream(new BufferedOutputStream(socketsignup.getOutputStream()));
-                System.out.println("outsignUp created");
+                outsignup=new DataOutputStream(new BufferedOutputStream(socketsignup.getOutputStream()));  //reading a string 
+                System.out.println("outsignUp created");                            //reading user detail for signup
                 Name=insignup.readUTF();
                 System.out.println("Name Accepted : "+Name);
                 username=insignup.readUTF();
@@ -729,6 +729,41 @@ public class MainServer extends javax.swing.JFrame
             }
         });
     }
+    
+    
+    class MultithreadingDemo extends Thread    //to make allow multi user to login at a time
+  { 
+    public void run() 
+    { 
+        try
+        { 
+            // Displaying the thread that is running 
+            System.out.println ("Thread " + 
+                  Thread.currentThread().getId() + 
+                  " is running"); 
+  
+        } 
+        catch (Exception e) 
+        { 
+            // Throwing an exception 
+            System.out.println ("Exception is caught"); 
+        } 
+    } 
+} 
+  
+// Main Class 
+public class Multithread 
+{ 
+    public static void main(String[] args) 
+    { 
+        int n = 8; // Number of threads 
+        for (int i=0; i<8; i++) 
+        { 
+            MultithreadingDemo object = new MultithreadingDemo(); 
+            object.start(); 
+        } 
+    } 
+} 
     private  Thread signup=null;
     private  Thread login=null;
     private  Thread SPD=null;
